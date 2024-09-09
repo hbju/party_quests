@@ -210,3 +210,28 @@ input[type="file"] {
     font-style: italic;
     color: #00FF00;
 }
+
+/* Remove these styles if they exist in your CSS file */
+.autocomplete-items,
+.autocomplete-items div,
+.autocomplete-active {
+    /* Remove all styles related to these classes */
+}
+
+/* Keep or modify these styles as needed */
+#nameInput {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #000;
+    color: #00FF00;
+    border: 1px solid #00FF00;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+/* You can keep this if you want to maintain the input's position */
+.input-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
