@@ -1,3 +1,19 @@
+const firebaseConfig = {
+  apiKey: "AIzaSyCN6iRgRuSKeItO_1A-CUSpQtuW-oIo-XI",
+  authDomain: "esnpartyquest.firebaseapp.com",
+  projectId: "esnpartyquest",
+  storageBucket: "esnpartyquest.appspot.com",
+  messagingSenderId: "252294601053",
+  appId: "1:252294601053:web:e0a58c307be112ed37b0b4",
+  measurementId: "G-EW09G1MDDZ"
+};
+
+// Initialize Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const storage = firebase.storage();
+
+
+
 // Sample database of names and tasks
 const tasksDatabase = [
     "Find John Doe and take a picture with him doing a 'L' on his forehead.",
@@ -114,7 +130,7 @@ const participantsDatabase = [
     "Zacharie Puippe",
     "Amine Bousseta",
     "Kim Huynh",
-    "Speich Lui",
+    "Arthur Speich",
     "Quentin Devaud",
     "Augustin Henry",
     "Tahiry Arintsoa",
@@ -130,7 +146,7 @@ const participantsDatabase = [
     "Céline Kalbermatten",
     "Chloé Dau",
     "Tim Lücking",
-    "Milou Ordonneau",
+    "Emilien Ordonneau",
     "Lucie Zhou",
     "Mara Blöchlinger",
     "Ines Acevedo",
@@ -149,10 +165,96 @@ function getRandomTask() {
 function checkName() {
     const name = document.getElementById("nameInput").value;
     const taskResult = document.getElementById("taskResult");
-
-    if (participantsDatabase.includes(name)) {
-        taskResult.textContent = getRandomTask();
-    } else {
-        taskResult.textContent = "Sorry, your name is not in the database. Try again!";
-    }
+    const proofUpload = document.getElementById("proofUpload");
+    
+    taskResult.textContent = "Accessing database...";
+    proofUpload.style.display = "none";
+    
+    setTimeout(() => {
+        if (participantsDatabase.includes(name)) {
+            const task = getRandomTask();
+            taskResult.textContent = "";
+            typeWriter(`Your Quest: ${task}`, "taskResult", 30);
+            proofUpload.style.display = "block";
+        } else {
+            taskResult.textContent = "Error: Name not found in database. Access denied.";
+            proofUpload.style.display = "none";
+        }
+    }, 1500);
 }
+
+function submitProof() {
+    const fileInput = document.getElementById("proofFile");
+    const description = document.getElementById("proofDescription").value;
+    const uploadResult = document.getElementById("uploadResult");
+
+    if (fileInput.files.length === 0) {
+        uploadResult.textContent = "Error: No file selected. Quest proof required.";
+        return;
+    }
+
+    const file = fileInput.files[0];
+    const fileName = file.name;
+
+    // Create a reference to 'quest_proofs/FILENAME.jpg'
+    const storageRef = storage.ref('quest_proofs/' + fileName);
+
+    uploadResult.textContent = "Uploading quest proof...";
+
+    // Upload the file
+    storageRef.put(file).then((snapshot) => {
+        console.log('Uploaded a file!');
+        // Get the download URL
+        return snapshot.ref.getDownloadURL();
+    }).then((downloadURL) => {
+        console.log('File available at', downloadURL);
+        // Here you could save the downloadURL and description to a database if needed
+        uploadResult.textContent = `Quest proof received. File "${fileName}" successfully uploaded. Awaiting verification.`;
+        
+        // Clear the form
+        fileInput.value = "";
+        document.getElementById("proofDescription").value = "";
+    }).catch((error) => {
+        console.error('Upload failed', error);
+        uploadResult.textContent = "Error: Upload failed. Please try again.";
+    });
+}
+
+
+function typeWriter(text, elementId, speed = 50) {
+    let i = 0;
+    const element = document.getElementById(elementId);
+    element.innerHTML = '';
+    function type() {
+      if (i < text.length) {
+        element.innerHTML += text.charAt(i);
+        i++;
+        setTimeout(type, speed);
+      }
+    }
+    type();
+  }
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    const rules = [
+      "Rule #1: Do not talk about the Quest.",
+      "Rule #2: Do not talk about the Quest.",
+      "Rule #3: Do not talk about the Quest."
+    ];
+    
+    rules.forEach((rule, index) => {
+      setTimeout(() => {
+        typeWriter(rule, `rule${index + 1}`, 50);
+      }, index * 2000);
+    });
+  });
+
+  function updateFileName() {
+    const fileInput = document.getElementById('proofFile');
+    const fileNameDisplay = document.getElementById('file-name-display');
+    if (fileInput.files.length > 0) {
+        fileNameDisplay.textContent = `Selected file: ${fileInput.files[0].name}`;
+    } else {
+        fileNameDisplay.textContent = '';
+    }
+  }

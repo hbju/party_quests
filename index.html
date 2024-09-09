@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Quest</title>
     <link rel="stylesheet" href="styles.css">
@@ -10,18 +9,31 @@
 <body>
     <div class="container">
         <h1>The Quest</h1>
-        <p>Three rules. 
-            <ol>
-                <li>Do not talk about the Quest.</li>
-                <li>Do not talk about the Quest.</li>
-                <li>Do not talk about the Quest.</li>
-            </ol>
-        </p>
-        <input type="text" id="nameInput" placeholder="Your Name">
-        <button onclick="checkName()">Get your Quest</button>
+        <p>Three rules.</p>
+        <p id="rule1"></p>
+        <p id="rule2"></p>
+        <p id="rule3"></p>
+        <p>Enter your name to get your Quest:</p>
+        <input type="text" id="nameInput" placeholder="Enter your name...">
+        <button onclick="checkName()">Get Quest</button>
         <p id="taskResult"></p>
+        <div id="proofUpload" style="display: none;">
+            <h3>Quest Completion Proof</h3>
+            <label for="proofFile" class="file-upload-label">Choose File</label>
+            <input type="file" id="proofFile" accept="image/*,video/*" onchange="updateFileName()">
+            <p id="file-name-display"></p>
+            <textarea id="proofDescription" placeholder="Describe how you completed the quest..."></textarea>
+            <button onclick="submitProof()">Submit Proof</button>
+        </div>
+        <p id="uploadResult"></p>
     </div>
+
+    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+
+    <!-- Add Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+
     <script src="scripts.js"></script>
 </body>
-
 </html>
